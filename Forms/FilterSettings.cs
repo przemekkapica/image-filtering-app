@@ -13,6 +13,7 @@ namespace image_filtering_app
             numericUpDown2.Value = (decimal)FilterValues.brightnessValue;
             numericUpDown3.Value = (decimal)FilterValues.contrastValue;
             numericUpDown4.Value = FilterValues.inversionValue;
+            numericUpDown5.Value = FilterValues.medianCutColors;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -21,6 +22,7 @@ namespace image_filtering_app
             FilterValues.brightnessValue = (double)numericUpDown2.Value;
             FilterValues.contrastValue = (double)numericUpDown3.Value;
             FilterValues.inversionValue = (int)numericUpDown4.Value;
+            FilterValues.medianCutColors = (int)numericUpDown5.Value;
 
             DialogResult = DialogResult.OK;
             Close();

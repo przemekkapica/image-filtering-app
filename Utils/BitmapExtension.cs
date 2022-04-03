@@ -185,7 +185,20 @@ namespace image_filtering_app
         static public Bitmap ApplyFilter(this Bitmap bmp, Func<byte[], byte[]> filter)
         {
             byte[] buffer = bmp.GetBitmapDataBytes();
+    
             byte[] result = filter(buffer);
+
+            Bitmap bmpRes = new Bitmap(bmp.Width, bmp.Height);
+            bmpRes.SetBitmapDataBytes(result);
+
+            return bmpRes;
+        }
+
+        static public Bitmap ApplyFilter(this Bitmap bmp, Func<byte[], int, int, byte[]> filter)
+        {
+            byte[] buffer = bmp.GetBitmapDataBytes();
+
+            byte[] result = filter(buffer, bmp.Width, bmp.Height);
 
             Bitmap bmpRes = new Bitmap(bmp.Width, bmp.Height);
             bmpRes.SetBitmapDataBytes(result);

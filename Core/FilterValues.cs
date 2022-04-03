@@ -15,5 +15,7 @@ namespace image_filtering_app
         public static double contrastValue = 10;
 
         public static int inversionValue = 255;
+
+        public static int medianCutColors = 4;
     }
 }

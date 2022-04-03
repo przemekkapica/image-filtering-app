@@ -6,8 +6,9 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
-
+using ImageFilteringApp.Utils;
 
 namespace image_filtering_app
 {
@@ -27,8 +28,16 @@ namespace image_filtering_app
             { "Outline",                (bmp) => bmp.ApplyFilter(KernelFilter, Kernel.OutlineKernel) },
             { "Emboss",                 (bmp) => bmp.ApplyFilter(KernelFilter, Kernel.EmbossKernel) },
 
-            { "Custom filters",  null }, // label
+            { "Dithering",              null }, // label
+            { "Random Dithering",       (bmp) => bmp.ApplyFilter(RandomDithering) }, 
+
+            { "Color quantization",     null }, // label
+            { "Median Cut",             (bmp) => bmp.ApplyFilter(MedianCut) }, 
+
+            { "Custom filters",         null }, // label
         };
+
+        public static List<double>[,] medianCutOutput = new List<double>[2000, 2000];
 
         public static void UpdateFilterMapping(string filter)
         {
@@ -183,6 +192,92 @@ namespace image_filtering_app
             }
 
             return result;
+        }
+
+        // -------------- Dithering Filters -------------- //
+        static public byte[] RandomDithering(byte[] buffer)
+        {
+            return buffer;
+        }
+
+        // -------------- Color quantization -------------- //
+        static public byte[] MedianCut(byte[] buffer, int width, int height)
+        {
+            byte[] result = new byte[buffer.Length];
+
+            List<List<double>> rgbaArray = FilterUtils.ConvertBGRAToRGBA(buffer, width);
+
+            SplitIntoBuckets(rgbaArray, FilterValues.medianCutColors);
+
+            result = FilterUtils.ConvertRGBAToBGRA(medianCutOutput, rgbaArray.Count, width, height);
+
+            return result;
+        }
+
+        
+
+        static private void MedianCutQuantize(List<List<double>> imageArray)
+        {   
+            List<double> rgbMeans = FilterUtils.GetRgbMeanValues(imageArray);
+            double rMean = rgbMeans[0];
+            double gMean = rgbMeans[1];
+            double bMean = rgbMeans[2];
+
+            for (int i = 0; i < imageArray.Count; i++)
+            {
+                List<double> rgba = new List<double>();
+                double alpha = imageArray[i][3];
+
+                rgba.Add(rMean);
+                rgba.Add(gMean);
+                rgba.Add(bMean);
+                rgba.Add(alpha);
+
+                medianCutOutput[(int)imageArray[i][4], (int)imageArray[i][5]] = rgba;
+            }
+        }
+
+        static private void SplitIntoBuckets(List<List<double>> rgbaArray, int depth)
+        {
+            if (rgbaArray.Count.Equals(0))
+            {
+                return;
+            }
+
+            if (depth.Equals(0))
+            {
+                MedianCutQuantize(rgbaArray);
+                return;
+            }
+
+            List<double> ranges = FilterUtils.GetRgbRanges(rgbaArray);
+            double rRange = ranges[0];
+            double gRange = ranges[1];
+            double bRange = ranges[2];
+
+            string spaceWithHighestRange = "R";
+
+            if (gRange >= rRange && gRange >= bRange)
+            {
+                spaceWithHighestRange = "G";
+            }
+            else if (bRange >= rRange && bRange >= gRange)
+            {
+                spaceWithHighestRange ="B";
+            }
+            else if (rRange >= gRange && rRange >= bRange)
+            {
+                spaceWithHighestRange = "R";
+            }
+
+            List<List<double>> sortedRGBA = FilterUtils.GetSortedImageArray(rgbaArray, spaceWithHighestRange);
+
+            int medianIndex = (int)((rgbaArray.Count + 1) / 2);
+
+            SplitIntoBuckets(FilterUtils.SplitList(sortedRGBA, 0, medianIndex), depth - 1);
+            SplitIntoBuckets(FilterUtils.SplitList(sortedRGBA, medianIndex, rgbaArray.Count), depth - 1);
+
+            return;
         }
     }
 }
