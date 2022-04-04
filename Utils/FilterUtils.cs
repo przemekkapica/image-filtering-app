@@ -9,7 +9,7 @@ namespace ImageFilteringApp.Utils
 {
     public static class FilterUtils
     {
-        public static List<double[]> OneBitGrayPallete = new List<double[]>();
+        public static List<double[]> Pallete = new List<double[]>();
 
         public static List<List<double>> GetSortedImageArray(List<List<double>> rgbaArray, string channel)
         {
@@ -153,11 +153,16 @@ namespace ImageFilteringApp.Utils
             return Math.Max(0, Math.Min(1, value));
         }
 
-        public static void InitializePallete()
+        public static void InitializePallete(int bitNumber)
         {
-            // TODO add other palletes
-            OneBitGrayPallete.Add(new double[] { 0.0, 0.0, 0.0 });
-            OneBitGrayPallete.Add(new double[] { 1.0, 1.0, 1.0 });
+            Pallete.Clear();
+
+            int n = (int)Math.Pow(2, bitNumber);
+            for (int i = 0; i < n; i++)
+            {
+                double value = (double)i / (double)(n - 1);
+                Pallete.Add(new double[] { value, value, value });
+            }
         }
 
         public static double[] ClosestPalleteCollor(double r, double g, double b)
@@ -165,11 +170,11 @@ namespace ImageFilteringApp.Utils
             double minDistance = 100000;
             int colorIndex = -1;
             
-            for (int i = 0; i < OneBitGrayPallete.Count; i++)
+            for (int i = 0; i < Pallete.Count; i++)
             {
-                double pR = OneBitGrayPallete[i][0];
-                double pG = OneBitGrayPallete[i][1];
-                double pB = OneBitGrayPallete[i][2];
+                double pR = Pallete[i][0];
+                double pG = Pallete[i][1];
+                double pB = Pallete[i][2];
 
                 double distance = Math.Sqrt((r - pR)*(r - pR) + (g - pG)*(g - pG) + (b - pB)*(b - pB));
                 if (distance < minDistance)
@@ -185,7 +190,7 @@ namespace ImageFilteringApp.Utils
             }
             else
             {
-                return OneBitGrayPallete[colorIndex];
+                return Pallete[colorIndex];
             }
 
         }

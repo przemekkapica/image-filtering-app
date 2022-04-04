@@ -197,7 +197,7 @@ namespace image_filtering_app
         // -------------- Dithering Filters -------------- //
         static public byte[] RandomDithering(byte[] buffer, int width, int height)
         {
-            FilterUtils.InitializePallete();
+            FilterUtils.InitializePallete(FilterValues.palleteBits);
 
             byte[] resultBuffer = new byte[buffer.Length];
             List<double>[,] result = new List<double>[2000, 2000];

@@ -9,7 +9,7 @@ namespace image_filtering_app
     static class FilterValues
     {
         public static double gammaValue = 1.5;
-
+        
         public static double brightnessValue = 10;
 
         public static double contrastValue = 10;
@@ -17,5 +17,7 @@ namespace image_filtering_app
         public static int inversionValue = 255;
 
         public static int medianCutColors = 4;
+
+        public static int palleteBits = 1;
     }
 }

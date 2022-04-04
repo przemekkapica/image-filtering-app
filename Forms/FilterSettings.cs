@@ -14,6 +14,7 @@ namespace image_filtering_app
             numericUpDown3.Value = (decimal)FilterValues.contrastValue;
             numericUpDown4.Value = FilterValues.inversionValue;
             numericUpDown5.Value = FilterValues.medianCutColors;
+            numericUpDown6.Value = FilterValues.palleteBits;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -23,6 +24,7 @@ namespace image_filtering_app
             FilterValues.contrastValue = (double)numericUpDown3.Value;
             FilterValues.inversionValue = (int)numericUpDown4.Value;
             FilterValues.medianCutColors = (int)numericUpDown5.Value;
+            FilterValues.palleteBits = (int)numericUpDown6.Value;
 
             DialogResult = DialogResult.OK;
             Close();
@@ -40,6 +42,11 @@ namespace image_filtering_app
         }
 
         private void ConstantsEditor_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
         {
 
         }
