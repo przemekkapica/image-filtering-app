@@ -195,15 +195,49 @@ namespace image_filtering_app
         }
 
         // -------------- Dithering Filters -------------- //
-        static public byte[] RandomDithering(byte[] buffer)
+        static public byte[] RandomDithering(byte[] buffer, int width, int height)
         {
-            return buffer;
+            FilterUtils.InitializePallete();
+
+            byte[] resultBuffer = new byte[buffer.Length];
+            List<double>[,] result = new List<double>[2000, 2000];
+
+            List<List<double>> rgbaArray = FilterUtils.ConvertBGRAToRGBA(buffer, width);
+
+            Random rand = new Random();
+
+            for (int i = 0; i < rgbaArray.Count; i++)
+            {
+                    List<double> rgba = new List<double>();
+
+                    double r = rgbaArray[i][0] / 255.0;
+                    double g = rgbaArray[i][1] / 255.0;
+                    double b = rgbaArray[i][2] / 255.0;
+                    double a = rgbaArray[i][3];
+
+                    r = FilterUtils.Clamp(r + rand.NextDouble() - 0.5);
+                    g = FilterUtils.Clamp(g + rand.NextDouble() - 0.5);
+                    b = FilterUtils.Clamp(b + rand.NextDouble() - 0.5);
+
+                    double[] rgb = FilterUtils.ClosestPalleteCollor(r, g, b);
+                    
+                    rgba.Add(rgb[0] * 255.0);
+                    rgba.Add(rgb[1] * 255.0);
+                    rgba.Add(rgb[2] * 255.0);
+                    rgba.Add(a);
+
+                    result[(int)rgbaArray[i][4], (int)rgbaArray[i][5]] = rgba;
+            }
+
+            resultBuffer = FilterUtils.ConvertRGBAToBGRA(result, rgbaArray.Count, width, height); 
+
+            return resultBuffer;
         }
 
         // -------------- Color quantization -------------- //
         static public byte[] MedianCut(byte[] buffer, int width, int height)
         {
-            byte[] result = new byte[buffer.Length];
+            byte[] result = new byte[buffer.Length]; 
 
             List<List<double>> rgbaArray = FilterUtils.ConvertBGRAToRGBA(buffer, width);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace ImageFilteringApp.Utils
 {
     public static class FilterUtils
     {
+        public static List<double[]> OneBitGrayPallete = new List<double[]>();
+
         public static List<List<double>> GetSortedImageArray(List<List<double>> rgbaArray, string channel)
         {
             switch (channel)
@@ -143,6 +146,48 @@ namespace ImageFilteringApp.Utils
                 result.Add(list[i]);
             }
             return result;
+        }
+
+        public static double Clamp(double value)
+        {
+            return Math.Max(0, Math.Min(1, value));
+        }
+
+        public static void InitializePallete()
+        {
+            // TODO add other palletes
+            OneBitGrayPallete.Add(new double[] { 0.0, 0.0, 0.0 });
+            OneBitGrayPallete.Add(new double[] { 1.0, 1.0, 1.0 });
+        }
+
+        public static double[] ClosestPalleteCollor(double r, double g, double b)
+        {
+            double minDistance = 100000;
+            int colorIndex = -1;
+            
+            for (int i = 0; i < OneBitGrayPallete.Count; i++)
+            {
+                double pR = OneBitGrayPallete[i][0];
+                double pG = OneBitGrayPallete[i][1];
+                double pB = OneBitGrayPallete[i][2];
+
+                double distance = Math.Sqrt((r - pR)*(r - pR) + (g - pG)*(g - pG) + (b - pB)*(b - pB));
+                if (distance < minDistance)
+                {
+                    colorIndex = i;
+                    minDistance = distance;
+                }
+            }
+
+            if (colorIndex == -1)
+            {
+                return new [] { 0.0, 0.0, 0.0};
+            }
+            else
+            {
+                return OneBitGrayPallete[colorIndex];
+            }
+
         }
     }
 }
