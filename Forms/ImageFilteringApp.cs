@@ -240,5 +240,11 @@ namespace image_filtering_app
                 }
             }
         }
+
+        private void drawingToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DrawingTool drawForm = new DrawingTool();
+            drawForm.ShowDialog();
+        }
     }
 }

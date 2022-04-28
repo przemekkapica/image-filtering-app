@@ -47,6 +47,7 @@
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawingToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TableControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).BeginInit();
@@ -64,25 +65,28 @@
             this.TableControl.Controls.Add(this.FltPictureBox, 1, 0);
             this.TableControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TableControl.Location = new System.Drawing.Point(0, 24);
+            this.TableControl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TableControl.Name = "TableControl";
             this.TableControl.RowCount = 1;
             this.TableControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TableControl.Size = new System.Drawing.Size(678, 437);
+            this.TableControl.Size = new System.Drawing.Size(791, 508);
             this.TableControl.TabIndex = 0;
             // 
             // OrgPictureBox
             // 
             this.OrgPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OrgPictureBox.Location = new System.Drawing.Point(3, 3);
+            this.OrgPictureBox.Location = new System.Drawing.Point(4, 3);
+            this.OrgPictureBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.OrgPictureBox.Name = "OrgPictureBox";
-            this.OrgPictureBox.Size = new System.Drawing.Size(333, 431);
+            this.OrgPictureBox.Size = new System.Drawing.Size(387, 502);
             this.OrgPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.OrgPictureBox.TabIndex = 0;
             this.OrgPictureBox.TabStop = false;
             // 
             // FltPictureBox
             // 
-            this.FltPictureBox.Location = new System.Drawing.Point(342, 3);
+            this.FltPictureBox.Location = new System.Drawing.Point(399, 3);
+            this.FltPictureBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.FltPictureBox.Name = "FltPictureBox";
             this.FltPictureBox.Size = new System.Drawing.Size(333, 431);
             this.FltPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -97,10 +101,12 @@
             this.filtersToolStripMenuItem,
             this.customKernelToolStripMenuItem,
             this.editFilterConstantsToolStripMenuItem,
-            this.resetToolStripMenuItem});
+            this.resetToolStripMenuItem,
+            this.drawingToolToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(678, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(791, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -116,7 +122,7 @@
             // OpenImageFileMenu
             // 
             this.OpenImageFileMenu.Name = "OpenImageFileMenu";
-            this.OpenImageFileMenu.Size = new System.Drawing.Size(180, 22);
+            this.OpenImageFileMenu.Size = new System.Drawing.Size(176, 22);
             this.OpenImageFileMenu.Text = "Open Image";
             this.OpenImageFileMenu.Click += new System.EventHandler(this.OpenImageFileMenu_Click);
             // 
@@ -124,7 +130,7 @@
             // 
             this.SaveImageFileMenu.Enabled = false;
             this.SaveImageFileMenu.Name = "SaveImageFileMenu";
-            this.SaveImageFileMenu.Size = new System.Drawing.Size(180, 22);
+            this.SaveImageFileMenu.Size = new System.Drawing.Size(176, 22);
             this.SaveImageFileMenu.Text = "Save Filtered Image";
             this.SaveImageFileMenu.Click += new System.EventHandler(this.SaveImageFileMenu_Click);
             // 
@@ -143,20 +149,20 @@
             this.fitToolStripMenuItem,
             this.originalSizeToolStripMenuItem});
             this.imageFitToolStripMenuItem.Name = "imageFitToolStripMenuItem";
-            this.imageFitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.imageFitToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.imageFitToolStripMenuItem.Text = "Image View Mode";
             // 
             // fitToolStripMenuItem
             // 
             this.fitToolStripMenuItem.Name = "fitToolStripMenuItem";
-            this.fitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fitToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.fitToolStripMenuItem.Text = "Fit";
             this.fitToolStripMenuItem.Click += new System.EventHandler(this.fitToolStripMenuItem_Click);
             // 
             // originalSizeToolStripMenuItem
             // 
             this.originalSizeToolStripMenuItem.Name = "originalSizeToolStripMenuItem";
-            this.originalSizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.originalSizeToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.originalSizeToolStripMenuItem.Text = "Original Size";
             this.originalSizeToolStripMenuItem.Click += new System.EventHandler(this.originalSizeToolStripMenuItem_Click);
             // 
@@ -180,14 +186,14 @@
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
             this.addToolStripMenuItem.Text = "Add";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             // 
             // editFilterConstantsToolStripMenuItem
             // 
             this.editFilterConstantsToolStripMenuItem.Name = "editFilterConstantsToolStripMenuItem";
-            this.editFilterConstantsToolStripMenuItem.Size = new System.Drawing.Size(122, 20);
+            this.editFilterConstantsToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
             this.editFilterConstantsToolStripMenuItem.Text = "Filter settings";
             this.editFilterConstantsToolStripMenuItem.Click += new System.EventHandler(this.editFilterConstantsToolStripMenuItem_Click);
             // 
@@ -213,18 +219,26 @@
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
-            // ImageProcessorForm
+            // drawingToolToolStripMenuItem
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.drawingToolToolStripMenuItem.Name = "drawingToolToolStripMenuItem";
+            this.drawingToolToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.drawingToolToolStripMenuItem.Text = "Drawing Tool";
+            this.drawingToolToolStripMenuItem.Click += new System.EventHandler(this.drawingToolToolStripMenuItem_Click);
+            // 
+            // ImageFilteringApp
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(678, 461);
+            this.ClientSize = new System.Drawing.Size(791, 532);
             this.Controls.Add(this.TableControl);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximumSize = new System.Drawing.Size(100000, 100000);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximumSize = new System.Drawing.Size(116664, 115379);
             this.MinimumSize = new System.Drawing.Size(16, 39);
-            this.Name = "ImageProcessorForm";
+            this.Name = "ImageFilteringApp";
             this.Text = "Image Filtering App";
             this.TableControl.ResumeLayout(false);
             this.TableControl.PerformLayout();
@@ -258,6 +272,7 @@
         private System.Windows.Forms.ToolStripMenuItem fitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem originalSizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawingToolToolStripMenuItem;
     }
 }
 
