@@ -39,7 +39,7 @@
             this.polygonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.antialiasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showClipBorderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearCanvasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -54,7 +54,6 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
             this.colorDialog3 = new System.Windows.Forms.ColorDialog();
-            this.clearCanvasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -128,29 +127,28 @@
             // midpointLineToolStripMenuItem
             // 
             this.midpointLineToolStripMenuItem.Name = "midpointLineToolStripMenuItem";
-            this.midpointLineToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.midpointLineToolStripMenuItem.Text = "Midpoint Line";
+            this.midpointLineToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.midpointLineToolStripMenuItem.Text = "Line";
             this.midpointLineToolStripMenuItem.Click += new System.EventHandler(this.midpointLineToolStripMenuItem_Click);
             // 
             // midpointCircleToolStripMenuItem
             // 
             this.midpointCircleToolStripMenuItem.Name = "midpointCircleToolStripMenuItem";
-            this.midpointCircleToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.midpointCircleToolStripMenuItem.Text = "Midpoint circle";
+            this.midpointCircleToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.midpointCircleToolStripMenuItem.Text = "Circle";
             this.midpointCircleToolStripMenuItem.Click += new System.EventHandler(this.midpointCircleToolStripMenuItem_Click);
             // 
             // polygonToolStripMenuItem
             // 
             this.polygonToolStripMenuItem.Name = "polygonToolStripMenuItem";
-            this.polygonToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.polygonToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.polygonToolStripMenuItem.Text = "Polygon";
             this.polygonToolStripMenuItem.Click += new System.EventHandler(this.polygonToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.antialiasingToolStripMenuItem,
-            this.showClipBorderToolStripMenuItem});
+            this.antialiasingToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -159,18 +157,18 @@
             // 
             this.antialiasingToolStripMenuItem.CheckOnClick = true;
             this.antialiasingToolStripMenuItem.Name = "antialiasingToolStripMenuItem";
-            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.antialiasingToolStripMenuItem.Text = "Antialiasing";
+            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.antialiasingToolStripMenuItem.Text = "Anti-aliasing";
             this.antialiasingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.antialiasingToolStripMenuItem_CheckedChanged);
             this.antialiasingToolStripMenuItem.Click += new System.EventHandler(this.antialiasingToolStripMenuItem_Click_1);
             // 
-            // showClipBorderToolStripMenuItem
+            // clearCanvasToolStripMenuItem
             // 
-            this.showClipBorderToolStripMenuItem.CheckOnClick = true;
-            this.showClipBorderToolStripMenuItem.Name = "showClipBorderToolStripMenuItem";
-            this.showClipBorderToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.showClipBorderToolStripMenuItem.Text = "Show Clip Border";
-            this.showClipBorderToolStripMenuItem.Click += new System.EventHandler(this.showClipBorderToolStripMenuItem_Click);
+            this.clearCanvasToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.clearCanvasToolStripMenuItem.Name = "clearCanvasToolStripMenuItem";
+            this.clearCanvasToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
+            this.clearCanvasToolStripMenuItem.Text = "Clear canvas";
+            this.clearCanvasToolStripMenuItem.Click += new System.EventHandler(this.clearCanvasToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -236,12 +234,11 @@
             // 
             // checkBox1
             // 
-            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(7, 200);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(47, 25);
+            this.checkBox1.Size = new System.Drawing.Size(56, 19);
             this.checkBox1.TabIndex = 6;
             this.checkBox1.Text = "Move";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -334,14 +331,6 @@
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
-            // clearCanvasToolStripMenuItem
-            // 
-            this.clearCanvasToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.clearCanvasToolStripMenuItem.Name = "clearCanvasToolStripMenuItem";
-            this.clearCanvasToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
-            this.clearCanvasToolStripMenuItem.Text = "Clear canvas";
-            this.clearCanvasToolStripMenuItem.Click += new System.EventHandler(this.clearCanvasToolStripMenuItem_Click);
-            // 
             // DrawingTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -400,7 +389,6 @@
         private System.Windows.Forms.ToolStripMenuItem polygonToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ColorDialog colorDialog3;
-        private System.Windows.Forms.ToolStripMenuItem showClipBorderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearCanvasToolStripMenuItem;
     }
 }

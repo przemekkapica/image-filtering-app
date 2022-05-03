@@ -125,7 +125,7 @@ namespace image_filtering_app
 
         public override string howToDraw()
         {
-            return "Click center and radius";
+            return "Point for the center then radius. Uses midpoint circle algorithm.";
         }
 
         public override List<ColorPoint> GetPixelsAA(Bitmap bmp)

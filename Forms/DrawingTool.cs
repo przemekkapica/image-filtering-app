@@ -42,7 +42,7 @@ namespace image_filtering_app
             toolsToolStripMenuItem.Enabled = true;
         }
 
-        Color backColor = Color.Green;
+        Color backColor = Color.AntiqueWhite;
         Bitmap NewBitmap()
         {
             var bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
@@ -87,11 +87,16 @@ namespace image_filtering_app
 
             pictureBox1.Image = bmp;
         }
+        
+        void EditShape()
+        {
+             
+        }
 
         Bitmap DrawShape(Bitmap bmp, Shape shape)
         {
             if (!antialiasingToolStripMenuItem.Checked || !shape.supportsAA)
-                foreach (var point in shape.GetPixels(showClipBorderToolStripMenuItem.Checked, colorDialog2.Color, bmp))
+                foreach (var point in shape.GetPixels(false, colorDialog2.Color, bmp))
                 {
                     if (point.Point.X >= pictureBox1.Width || point.Point.Y >= pictureBox1.Height || point.Point.X <= 0 || point.Point.Y <= 0)
                         continue;
@@ -119,7 +124,6 @@ namespace image_filtering_app
 
         bool drawing = false;
         bool moving = false;
-        bool clipping = false;
         int index;
 
         void drawMode(
@@ -156,7 +160,7 @@ namespace image_filtering_app
             {
                 if (currentShape.shapeType == DrawingShape.POLY)
                 {
-                    if (1 == ((Polygon)currentShape).AddPoint(e.Location, out MidPointLine line))
+                    if (1 == ((Polygon)currentShape).AddPoint(e.Location, out SymmetricMidPointLine line))
                         drawMode(false);
 
                     if (line != null)
@@ -177,7 +181,7 @@ namespace image_filtering_app
 
         private void midpointLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value, backColor));
+            drawMode(true, new SymmetricMidPointLine(colorDialog1.Color, (int)numericUpDown1.Value, backColor));
         }
 
         private void polygonToolStripMenuItem_Click(object sender, EventArgs e)
@@ -185,64 +189,6 @@ namespace image_filtering_app
             drawMode(true, new Polygon(colorDialog1.Color, (int)numericUpDown1.Value));
         }
 
-
-        bool flooding = false;
-
-        private void floodFillToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            flooding = true;
-        }
-
-        void clipMode(bool status, Shape shape, int modify_index = -1)
-        {
-            //if (!status && shapes[index].shapeType == DrawingShape.POLY)
-            //{
-            //    ClippedPolygon cpoly = new ClippedPolygon((Polygon)shapes[index]);
-            //    cpoly.SetBoundingRect((Rectangle)currentShape);
-            //    shapes[index] = cpoly;
-            //    RefreshShapes();
-            //}
-            //else if (!status && shapes[index].shapeType == DrawingShape.CPOLY)
-            //{
-            //    ((ClippedPolygon)shapes[index]).SetBoundingRect((Rectangle)currentShape);
-            //    RefreshShapes();
-            //}
-
-            //splitContainer2.Panel1.Enabled = !status;
-
-            //index = modify_index;
-            //clipping = status;
-
-            //currentDrawingShape = shape == null ? DrawingShape.EMPTY : shape.shapeType;
-            //currentShape = shape;
-            //UpdateLabel();
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            //if (shapes.Count < 1)
-            //    return;
-
-            //if ((listBox1.SelectedItem as Shape).shapeType != DrawingShape.POLY && (listBox1.SelectedItem as Shape).shapeType != DrawingShape.CPOLY)
-            //    return;
-
-            ////FillMenu fillMenuForm = new FillMenu();
-
-            //switch (fillMenuForm.ShowDialog())
-            //{
-            //    case DialogResult.Yes:
-            //        (listBox1.SelectedItem as Polygon).SetFiller(fillMenuForm.FillColor);
-            //        break;
-            //    case DialogResult.No:
-            //        (listBox1.SelectedItem as Polygon).SetFiller(fillMenuForm.filename);
-            //        break;
-            //    case DialogResult.Cancel:
-            //    default:
-            //        break;
-            //}
-
-            //RefreshShapes();
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -263,15 +209,19 @@ namespace image_filtering_app
                     drawMode(true, new MidPointCircle(colorDialog1.Color), listBox1.SelectedIndex);
                     break;
                 case DrawingShape.LINE:
-                    drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
+                    drawMode(true, new SymmetricMidPointLine(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
                     break;
                 case DrawingShape.POLY:
-                case DrawingShape.CPOLY:
                     drawMode(true, new Polygon(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
                     break;
                 default:
                 case DrawingShape.EMPTY:
                     break;
+            }
+
+            if (editMode)
+            {
+                shapes.RemoveAt(listBox1.SelectedIndex);
             }
         }
 
@@ -292,7 +242,7 @@ namespace image_filtering_app
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
             saveFileDialog1.InitialDirectory = "c:\\Downloads";
-            saveFileDialog1.Filter = "Vector shapes (*.cg2020)|*.cg2020";
+            saveFileDialog1.Filter = "Vector shapes (*.shapes)|*.shapes";
             saveFileDialog1.DefaultExt = "dat";
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.Title = "Save the filtered image";
@@ -314,7 +264,7 @@ namespace image_filtering_app
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = "c:\\Downloads";
-                openFileDialog.Filter = "Vector shapes (*.cg2020)|*.cg2020";
+                openFileDialog.Filter = "Vector shapes (*.shapes)|*.shapes";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
 
@@ -338,15 +288,6 @@ namespace image_filtering_app
             RefreshShapes();
         }
 
-        private void backgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (colorDialog2.ShowDialog() == DialogResult.OK)
-            {
-                backColor = colorDialog2.Color;
-                RefreshShapes();
-            }
-        }
-
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             moving = true;
@@ -354,6 +295,7 @@ namespace image_filtering_app
 
         System.Drawing.Point movestart;
         System.Drawing.Point moveend;
+        private bool editMode = false;
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -430,7 +372,10 @@ namespace image_filtering_app
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-
+            //if (editMode)
+            //{
+            //    shapes[listBox1.SelectedIndex];
+            //}
         }
 
         private void antialiasingToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -449,5 +394,10 @@ namespace image_filtering_app
 
             RefreshShapes();
         }
+
+        //private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    this.editMode = true;
+        //}
     }
 }

@@ -15,7 +15,7 @@ namespace image_filtering_app
 
         public Polygon(Color color, int thicc) : base(color)
         {
-            thickness = thicc - 1;
+            thickness = thicc + 1;
             shapeType = DrawingShape.POLY;
             supportsAA = true;
         }
@@ -39,14 +39,14 @@ namespace image_filtering_app
             return 0;
         }
 
-        public int AddPoint(Point point, out MidPointLine tmpLine)
+        public int AddPoint(Point point, out SymmetricMidPointLine tmpLine)
         {
             tmpLine = null;
             if (points == null)
                 return AddPoint(point);
 
             int returnValue = AddPoint(point);
-            tmpLine = new MidPointLine(shapeColor, thickness, points[points.Count - 2], points.Last());
+            tmpLine = new SymmetricMidPointLine(shapeColor, thickness, points[points.Count - 2], points.Last());
             return returnValue;
         }
 
@@ -57,14 +57,14 @@ namespace image_filtering_app
             var pixels = new List<ColorPoint>();
 
             for (int i = 0; i <= points.Count - 2; i++)
-                pixels.AddRange(new MidPointLine(shapeColor, thickness, points[i], points[i + 1]).GetPixels());
+                pixels.AddRange(new SymmetricMidPointLine(shapeColor, thickness, points[i], points[i + 1]).GetPixels());
 
             return pixels;
         }
 
         public override string howToDraw()
         {
-            return "Click each point and click on first to finish.";
+            return "Each click represents polygon vertex. Click on the first point to finish drawing.";
         }
 
         public override void MovePoints(Point displacement)
@@ -80,7 +80,7 @@ namespace image_filtering_app
 
 
             for (int i = 0; i <= points.Count - 2; i++)
-                pixels.AddRange((new MidPointLine(shapeColor, thickness, points[i], points[i + 1])).GetPixelsAA(bmp));
+                pixels.AddRange((new SymmetricMidPointLine(shapeColor, thickness, points[i], points[i + 1])).GetPixelsAA(bmp));
 
             return pixels;
         }

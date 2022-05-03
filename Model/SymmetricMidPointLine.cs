@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -26,31 +27,31 @@ namespace image_filtering_app
     }
 
     [Serializable]
-    class MidPointLine : Shape
+    class SymmetricMidPointLine : Shape
     {
         public Point? startPoint = null;
         public Point? endPoint = null;
         public int thickness;
         public Color backColor;
 
-        public MidPointLine(Color color, int thicc, Color backColor) : base(color)
+        public SymmetricMidPointLine(Color color, int thicc, Color backColor) : base(color)
         {
-            thickness = thicc - 1;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             supportsAA = true;
             this.backColor = backColor;
         }
 
-        public MidPointLine(Color color, int thicc) : base(color)
+        public SymmetricMidPointLine(Color color, int thicc) : base(color)
         {
-            thickness = thicc - 1;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             supportsAA = true;
         }
 
-        public MidPointLine(Color color, int thicc, Point start, Point end, Color backColor) : base(color)
+        public SymmetricMidPointLine(Color color, int thicc, Point start, Point end, Color backColor) : base(color)
         {
-            thickness = thicc - 1;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;
@@ -58,9 +59,9 @@ namespace image_filtering_app
             supportsAA = true;
         }
 
-        public MidPointLine(Color color, int thicc, Point start, Point end) : base(color)
+        public SymmetricMidPointLine(Color color, int thicc, Point start, Point end) : base(color)
         {
-            thickness = thicc - 1;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;
@@ -100,11 +101,44 @@ namespace image_filtering_app
         }
 
         List<ColorPoint> SymmetricMidPointAlgorithm(Point start, Point end)
-        // https://stackoverflow.com/questions/11678693/all-cases-covered-bresenhams-line-algorithm
         {
             List<ColorPoint> points = new List<ColorPoint>();
 
-            int slope = Math.Abs((end.Y - start.Y) / (end.X - start.X));
+            int slope = 0;
+            if ((end.X - start.X) == 0)
+            {
+                slope = 10000000;
+            }
+            else
+            {
+                slope = Math.Abs((end.Y - start.Y) / (end.X - start.X));
+            }
+
+            int x = start.X;
+            int x2 = end.X;
+            int y = start.Y;
+            int y2 = end.Y;
+
+            int w = x2 - x;
+            int h = y2 - y;
+            int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+
+            if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+            if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+            if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+
+            int longest = Math.Abs(w);
+            int shortest = Math.Abs(h);
+
+            if (longest <= shortest)
+            {
+                longest = Math.Abs(h);
+                shortest = Math.Abs(w);
+                if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+                dx2 = 0;
+            }
+
+            int numerator = longest >> 1;
 
             // slope > 1 means we are in the 2nd, 3rd, 6th, or 7th octant: flip the axes
             if (slope > 1)
@@ -134,9 +168,7 @@ namespace image_filtering_app
 
                     do
                     {
-                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
-                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
-
+                        fillDueGivenThickness(points, w, h, f, b);
 
                         f = new Point(f.X + 0, f.Y + 1);
                         b = new Point(b.X + 0, b.Y - 1);
@@ -161,8 +193,7 @@ namespace image_filtering_app
 
                     do
                     {
-                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
-                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
+                        fillDueGivenThickness(points, w, h, f, b);
 
                         f = new Point(f.X + 0, f.Y + 1);
                         b = new Point(b.X + 0, b.Y - 1);
@@ -207,8 +238,7 @@ namespace image_filtering_app
 
                     do
                     {
-                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
-                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
+                        fillDueGivenThickness(points, w, h, f, b);
 
                         f = new Point(f.X + 1, f.Y + 0);
                         b = new Point(b.X + -1, b.Y + 0);
@@ -235,13 +265,10 @@ namespace image_filtering_app
 
                     do
                     {
-                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
-                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
-
+                        fillDueGivenThickness(points, w, h, f, b);
 
                         f = new Point(f.X + 1, f.Y + 0);
                         b = new Point(b.X + -1, b.Y + 0);
-
 
                         if (d < 0)
                         {
@@ -255,9 +282,42 @@ namespace image_filtering_app
                         }
                     } while (f.X <= b.X);
                 }
+
+                numerator += shortest;
+                if (numerator >= longest)
+                {
+                    numerator -= longest;
+                    x += dx1;
+                    y += dy1;
+                }
+                else
+                {
+                    x += dx2;
+                    y += dy2;
+                }
             }
 
             return points;
+        }
+
+        private void fillDueGivenThickness(List<ColorPoint> points, int w, int h, Point f, Point b)
+        {
+            if (Math.Abs(h) > Math.Abs(w))
+            {
+                for (int j = 1; j < thickness; j++)
+                {
+                    points.Add(new ColorPoint(shapeColor, new Point(f.X - j, f.Y)));
+                    points.Add(new ColorPoint(shapeColor, new Point(b.X - j, b.Y)));
+                }
+            }
+            else if (Math.Abs(w) > Math.Abs(h))
+            {
+                for (int j = 1; j < thickness; j++)
+                {
+                    points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y - j)));
+                    points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y - j)));
+                }
+            }
         }
 
         List<ColorPoint> XiaolinWuAlgorithm(Point start, Point end)
@@ -383,7 +443,7 @@ namespace image_filtering_app
 
         public override string howToDraw()
         {
-            return "Click start and end points";
+            return "Point for the start and end of a line. Uses symmetric midpoint line algorithm.";
         }
     }
 }

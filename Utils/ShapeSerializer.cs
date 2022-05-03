@@ -49,7 +49,7 @@ namespace image_filtering_app
                             formatter.Serialize(stream, (MidPointCircle)shaped);
                             break;
                         case DrawingShape.LINE:
-                            formatter.Serialize(stream, (MidPointLine)shaped);
+                            formatter.Serialize(stream, (SymmetricMidPointLine)shaped);
                             break;
                         case DrawingShape.POLY:
                             formatter.Serialize(stream, (Polygon)shaped);
