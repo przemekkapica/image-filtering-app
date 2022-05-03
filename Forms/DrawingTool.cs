@@ -430,5 +430,17 @@ namespace image_filtering_app
         {
 
         }
+
+        private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (shapes.Count == 0)
+                return;
+
+            shapes.Clear();
+
+            listBox1_SelectedIndexChanged(null, null);
+
+            RefreshShapes();
+        }
     }
 }

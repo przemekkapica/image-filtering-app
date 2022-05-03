@@ -96,7 +96,7 @@ namespace image_filtering_app
         {
             Line line = new Line(startPoint.Value, endPoint.Value);
 
-            return GuptaSproullAlgorithm(bmp, line.Start, line.End);
+            return XiaolinWuAlgorithm(line.Start, line.End);
         }
 
         List<ColorPoint> SymmetricMidPointAlgorithm(Point start, Point end)
@@ -104,144 +104,275 @@ namespace image_filtering_app
         {
             List<ColorPoint> points = new List<ColorPoint>();
 
-            int x1 = start.X, y1 = start.Y;
-            int x2 = end.X, y2 = end.Y;
+            int slope = Math.Abs((end.Y - start.Y) / (end.X - start.X));
 
-            int dx = x2 - x1;
-            int dy = y2 - y1;
-            int d = 2 * dy - dx;
-            int dE = 2 * dy;
-            int dNE = 2 * (dy - dx);
-            int xf = x1, yf = y1;
-            int xb = x2, yb = y2;
-            points.Add( new ColorPoint(shapeColor, new Point(xf, yf)));
-            points.Add(new ColorPoint(shapeColor, new Point(xb, yb)));
-            while (xf < xb)
+            // slope > 1 means we are in the 2nd, 3rd, 6th, or 7th octant: flip the axes
+            if (slope > 1)
             {
-                ++xf; --xb;
-                if (d < 0)
-                    d += dE;
+                if (start.Y > end.Y)
+                {
+                    (start, end) = (end, start);
+                }
+
+                int dx = end.X - start.X;
+                int dy = end.Y - start.Y;
+                Point delta = new Point(dx, dy);
+
+                int dE = 2 * delta.X;
+                int dNE = 2 * (delta.X - delta.Y);
+                int dSE = 2 * (delta.X + delta.Y);
+                Point f = start;
+                Point b = end;
+
+                // 3rd or 6th octant:
+                if (start.X < end.X)
+                {
+                    Point fNE = new Point(1, 0);
+                    var bNE = new Point(-fNE.X, -fNE.Y);
+
+                    int d = 2 * delta.X - delta.Y;
+
+                    do
+                    {
+                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
+                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
+
+
+                        f = new Point(f.X + 0, f.Y + 1);
+                        b = new Point(b.X + 0, b.Y - 1);
+                        if (d < 0)
+                        {
+                            d += dE;
+                        }
+                        else
+                        {
+                            d += dNE;
+                            f = new Point(f.X + fNE.X, f.Y + fNE.Y);
+                            b = new Point(b.X + bNE.X, b.Y + bNE.Y);
+                        }
+                    } while (f.Y <= f.Y);
+                }
                 else
                 {
-                    d += dNE;
-                    ++yf;
-                    --yb;
+                    var fSE = new Point(-1, 0);
+                    var bSE = new Point(-fSE.X, -fSE.Y);
+
+                    int d = 2 * delta.X + delta.Y;
+
+                    do
+                    {
+                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
+                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
+
+                        f = new Point(f.X + 0, f.Y + 1);
+                        b = new Point(b.X + 0, b.Y - 1);
+                        if (d < 0)
+                        {
+                            d += dSE;
+                            f = new Point(f.X + fSE.X, f.Y + fSE.Y);
+                            b = new Point(b.X + bSE.X, b.Y + bSE.Y);
+
+                        }
+                        else
+                        {
+                            d += dE;
+                        }
+                    } while (f.Y <= b.Y);
                 }
-                points.Add(new ColorPoint(shapeColor, new Point(xf, yf)));
-                points.Add(new ColorPoint(shapeColor, new Point(xb, yb)));
+            }
+            else
+            {
+                if (start.X > end.X)
+                {
+                    (start, end) = (end, start);
+                }
+                int dx = end.X - start.X;
+                int dy = end.Y - start.Y;
+                Point delta = new Point(dx, dy);
+
+                //const delta = end.sub(start);
+                int dE = 2 * delta.Y;
+                int dNE = 2 * (delta.Y - delta.X);
+                int dSE = 2 * (delta.Y + delta.X);
+                Point f = start;
+                Point b = end;
+
+                // 1st or 5th octant:
+                if (start.Y < end.Y)
+                {
+                    var fNE = new Point(0, 1);
+                    var bNE = new Point(-fNE.X, -fNE.Y);
+
+                    int d = 2 * delta.Y - delta.X;
+
+                    do
+                    {
+                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
+                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
+
+                        f = new Point(f.X + 1, f.Y + 0);
+                        b = new Point(b.X + -1, b.Y + 0);
+
+                        if (d < 0)
+                        {
+                            d += dE;
+                        }
+                        else
+                        {
+                            d += dNE;
+                            f = new Point(f.X + fNE.X, f.Y + fNE.Y);
+                            b = new Point(b.X + bNE.X, b.Y + bNE.Y);
+                        }
+                    } while (f.X <= b.X);
+                }
+                else
+                {
+                    var fSE = new Point(0, -1);
+                    var bSE = new Point(-fSE.X, -fSE.Y);
+
+
+                    int d = 2 * delta.Y + delta.X;
+
+                    do
+                    {
+                        points.Add(new ColorPoint(shapeColor, new Point(f.X, f.Y)));
+                        points.Add(new ColorPoint(shapeColor, new Point(b.X, b.Y)));
+
+
+                        f = new Point(f.X + 1, f.Y + 0);
+                        b = new Point(b.X + -1, b.Y + 0);
+
+
+                        if (d < 0)
+                        {
+                            d += dSE;
+                            f = new Point(f.X + fSE.X, f.Y + fSE.Y);
+                            b = new Point(b.X + bSE.X, b.Y + bSE.Y);
+                        }
+                        else
+                        {
+                            d += dE;
+                        }
+                    } while (f.X <= b.X);
+                }
             }
 
             return points;
         }
 
-        List<ColorPoint> GuptaSproullAlgorithm(Bitmap bmp, Point start, Point end)
-        // http://elynxsdk.free.fr/ext-docs/Rasterization/Antialiasing/Gupta%20sproull%20antialiased%20lines.htm
-        // https://jamesarich.weebly.com/uploads/1/4/0/3/14035069/480xprojectreport.pdf
+        List<ColorPoint> XiaolinWuAlgorithm(Point start, Point end)
         {
-            var points = new List<ColorPoint>();
+            List<ColorPoint> points = new List<ColorPoint>();
 
-            int x1 = start.X, y1 = start.Y;
-            int x2 = end.X, y2 = end.Y;
-
-            int dx = x2 - x1;
-            int dy = y2 - y1;
-
-            int du, dv, u, x, y, ix, iy;
-
-            // By switching to (u,v), we combine all eight octant
-            int adx = dx < 0 ? -dx : dx;
-            int ady = dy < 0 ? -dy : dy;
-            x = x1;
-            y = y1;
-            if (adx > ady)
+            bool direction = Math.Abs(end.Y - start.Y) > Math.Abs(end.X - start.X);
+            if (direction)//replace x and y
             {
-                du = adx;
-                dv = ady;
-                u = x2;
-                ix = dx < 0 ? -1 : 1;
-                iy = dy < 0 ? -1 : 1;
+                Point tmp = new Point(start.X, start.Y);
+                Point tmp2 = new Point(end.X, end.Y);
+                start = new Point(tmp.Y, tmp.X);
+                end = new Point(tmp2.Y, tmp2.X);
+            }
+            if (start.X > end.X)//replace points
+            {
+                Point tmp = new Point(start.X, start.Y);
+                Point tmp2 = new Point(end.X, end.Y);
+                start = new Point(tmp2.X, tmp2.Y);
+                end = new Point(tmp.X, tmp.Y);
+            }
+            double dx = end.X - start.X;
+            double dy = end.Y - start.Y;
+            double gradient = (double)((double)(dy) / (double)(dx));
+            //first point
+            int endX = round(start.X);
+            double endY = start.Y + gradient * (endX - start.X);
+            double gapX = rfPart(start.X + 0.5);
+            int pxlX_1 = endX;
+            int pxlY_1 = iPart(endY);
+            if (direction)
+            {
+                Point a = new Point(pxlY_1, pxlX_1);
+                ColorPoint b = new ColorPoint(shapeColor, new Point(pxlY_1, pxlX_1));
+                points.Add(b);
+                b = new ColorPoint(shapeColor, new Point(pxlY_1 + 1, pxlX_1));
+                points.Add(b);
             }
             else
             {
-                du = ady;
-                dv = adx;
-                u = y2;
-                ix = dx < 0 ? -1 : 1;
-                iy = dy < 0 ? -1 : 1;
+                Point a = new Point(pxlX_1, pxlY_1);
+                ColorPoint b = new ColorPoint(shapeColor, new Point(pxlX_1, pxlY_1));
+                points.Add(b);
+                b = new ColorPoint(shapeColor, new Point(pxlX_1, pxlY_1 + 1));
+                points.Add(b);
             }
+            double intery = endY + gradient;
 
-            int uEnd = u + du;
-            int d = (2 * dv) - du; // Initial value as in Bresenham's
-            int incrS = 2 * dv; // Δd for straight increments
-            int incrD = 2 * (dv - du); // Δd for diagonal increments
-            int twovdu = 0; // Numerator of distance
-            double invD = 1.0 / (2.0 * Math.Sqrt(du * du + dv * dv)); // Precomputed inverse denominator
-            double invD2du = 2.0 * (du * invD); // Precomputed constant
-
-            if (adx > ady)
+            //second point
+            endX = round(end.X);
+            endY = end.Y + gradient * (endX - end.X);
+            gapX = fPart(end.X + 0.5);
+            int pxlX_2 = endX;
+            int pxlY_2 = iPart(endY);
+            if (direction)
             {
-                do
-                {
-                    points.Add(newColorPixel(bmp, x, y, twovdu * invD));
-                    points.Add(newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD));
-                    points.Add(newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD));
-
-
-                    if (d < 0)
-                    {
-                        // Choose straight
-                        twovdu = d + du;
-                        d += incrS;
-
-                    }
-                    else
-                    {
-                        // Choose diagonal
-                        twovdu = d - du;
-                        d += incrD;
-                        y += iy;
-                    }
-                    u++;
-                    x += ix;
-                } while (u < uEnd);
+                Point a = new Point(pxlY_2, pxlX_2);
+                ColorPoint b = new ColorPoint(shapeColor, new Point(pxlY_2, pxlX_2));
+                points.Add(b);
+                b = new ColorPoint(shapeColor, new Point(pxlY_2 + 1, pxlX_2));
+                points.Add(b);
             }
             else
             {
-                do
-                {
-                    points.Add(newColorPixel(bmp, x, y, twovdu * invD));
-                    points.Add(newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD));
-                    points.Add(newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD));
+                Point a = new Point(pxlX_2, pxlY_2);
+                ColorPoint b = new ColorPoint(shapeColor, new Point(pxlX_2, pxlY_2));
+                points.Add(b);
+                b = new ColorPoint(shapeColor, new Point(pxlX_2, pxlY_2 + 1));
+                points.Add(b);
+            }
 
-                    if (d < 0)
-                    {
-                        // Choose straight
-                        twovdu = d + du;
-                        d += incrS;
-                    }
-                    else
-                    {
-                        // Choose diagonal
-                        twovdu = d - du;
-                        d += incrD;
-                        x += ix;
-                    }
-                    u++;
-                    y += iy;
-                } while (u < uEnd);
+            //loop from all points
+            for (double x = (pxlX_1 + 1); x <= (pxlX_2 - 1); x++)
+            {
+                if (direction)
+                {
+                    Point a = new Point(iPart(intery), (int)x);
+                    ColorPoint b = new ColorPoint(shapeColor, new Point(iPart(intery), (int)x));
+                    points.Add(b);
+                    b = new ColorPoint(shapeColor, new Point(iPart(intery) + 1, (int)x));
+                    points.Add(b);
+                }
+                else
+                {
+                    Point a = new Point((int)x, iPart(intery));
+                    ColorPoint b = new ColorPoint(shapeColor, new Point((int)x, iPart(intery)));
+                    points.Add(b);
+                    b = new ColorPoint(shapeColor, new Point((int)x, iPart(intery) + 1));
+                    points.Add(b);
+                }
+                intery += gradient;
             }
 
             return points;
         }
 
-        ColorPoint newColorPixel(Bitmap bmp, int x, int y, double dist)
+        // helper methods
+        int iPart(double d)
         {
-            double value = 1 - Math.Pow((dist * 2 / 3), 2);
+            return (int)d;
+        }
 
-            Color old = bmp.GetPixelFast(x, y);
-            Color col = ColorInterpolator.InterpolateBetween(old, shapeColor, value);
+        int round(double d)
+        {
+            return (int)(d + 0.50000);
+        }
 
-            return new ColorPoint(col, new Point(x, y));
+        double fPart(double d)
+        {
+            return (double)(d - (int)(d));
+        }
+
+        double rfPart(double d)
+        {
+            return (double)(1.00000 - (double)(d - (int)(d)));
         }
 
         public override void MovePoints(Point displacement)
