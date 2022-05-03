@@ -20,8 +20,15 @@ namespace image_filtering_app
         public DrawingTool()
         {
             InitializeComponent();
-
+            InitializeMoveCheckbox();
             listBox1.DataSource = shapes;
+        }
+
+        private void InitializeMoveCheckbox()
+        {
+            checkBox1.Appearance = Appearance.Normal;
+            checkBox1.AutoSize = false;
+            checkBox1.Size = new Size(145, 27);
         }
 
         BindingList<Shape> shapes = new BindingList<Shape>();
