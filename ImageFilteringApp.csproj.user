@@ -8,6 +8,9 @@
     <Compile Update="Forms\DrawingTool.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\FillMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\FilterSettings.cs">
       <SubType>Form</SubType>
     </Compile>

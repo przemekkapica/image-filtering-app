@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace image_filtering_app
     {
         public List<Point> points = null;
         public int thickness;
+
+        protected Filler filler = null;
 
         public Polygon(Color color, int thicc) : base(color)
         {
@@ -56,6 +59,9 @@ namespace image_filtering_app
         {
             var pixels = new List<ColorPoint>();
 
+            if (filler != null)
+                pixels.AddRange(filler.FillPoints());
+
             for (int i = 0; i <= points.Count - 2; i++)
                 pixels.AddRange(new SymmetricMidPointLine(shapeColor, thickness, points[i], points[i + 1]).GetPixels());
 
@@ -67,22 +73,44 @@ namespace image_filtering_app
             return "Each click represents polygon vertex. Click on the first point to finish drawing.";
         }
 
-        public override void MovePoints(Point displacement)
-        {
-            for (int i = 0; i < points.Count; i++)
-                points[i] = points[i] + (Size)displacement;
-
-        }
 
         public override List<ColorPoint> GetPixelsAA(Bitmap bmp)
         {
             var pixels = new List<ColorPoint>();
 
+            if (filler != null)
+                pixels.AddRange(filler.FillPoints());
 
             for (int i = 0; i <= points.Count - 2; i++)
                 pixels.AddRange((new SymmetricMidPointLine(shapeColor, thickness, points[i], points[i + 1])).GetPixelsAA(bmp));
 
             return pixels;
+        }
+
+        public override void MovePoints(Point displacement)
+        {
+            for (int i = 0; i < points.Count; i++)
+                points[i] = points[i] + (Size)displacement;
+
+            if (filler != null)
+                filler.UpdatePoints(points);
+        }
+
+        public void SetFiller(Color color)
+        {
+            Debug.WriteLine("DUPA DUPA");
+            filler = new Filler(points, fillColor: color);
+        }
+
+        public void SetFiller(string filename)
+        {
+            Debug.WriteLine("DUPA DUPA");
+            filler = new Filler(points, fillImage: new Bitmap(filename));
+        }
+
+        public void UnSetFiller()
+        {
+            filler = null;
         }
 
         public override string ToString()

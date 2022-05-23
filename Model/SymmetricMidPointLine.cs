@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageFilteringApp.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,23 +10,6 @@ using System.Threading.Tasks;
 namespace image_filtering_app
 {
 
-    public struct Line
-    {
-        public Point Start;
-        public Point End;
-
-        public Line(Point s, Point e)
-        {
-            End = e;
-            Start = s;
-        }
-
-        public override string ToString()
-        {
-            return $"{Start.ToString()} && {End.ToString()}";
-        }
-    }
-
     [Serializable]
     class SymmetricMidPointLine : Shape
     {
@@ -34,9 +18,11 @@ namespace image_filtering_app
         public int thickness;
         public Color backColor;
 
+        Clipping clipper = null;
+
         public SymmetricMidPointLine(Color color, int thicc, Color backColor) : base(color)
         {
-            thickness = thicc + 1;
+            thickness = thicc;
             shapeType = DrawingShape.LINE;
             supportsAA = true;
             this.backColor = backColor;
@@ -44,14 +30,14 @@ namespace image_filtering_app
 
         public SymmetricMidPointLine(Color color, int thicc) : base(color)
         {
-            thickness = thicc + 1;
+            thickness = thicc;
             shapeType = DrawingShape.LINE;
             supportsAA = true;
         }
 
         public SymmetricMidPointLine(Color color, int thicc, Point start, Point end, Color backColor) : base(color)
         {
-            thickness = thicc + 1;
+            thickness = thicc;
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;
@@ -61,11 +47,20 @@ namespace image_filtering_app
 
         public SymmetricMidPointLine(Color color, int thicc, Point start, Point end) : base(color)
         {
-            thickness = thicc + 1;
+            thickness = thicc;
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;
             supportsAA = true;
+        }
+
+        public SymmetricMidPointLine(Color color, int thicc, Point start, Point end, Clipping clip) : base(color)
+        {
+            thickness = thicc;
+            shapeType = DrawingShape.LINE;
+            startPoint = start;
+            endPoint = end;
+            clipper = clip;
         }
 
 
@@ -182,7 +177,7 @@ namespace image_filtering_app
                             f = new Point(f.X + fNE.X, f.Y + fNE.Y);
                             b = new Point(b.X + bNE.X, b.Y + bNE.Y);
                         }
-                    } while (f.Y <= f.Y);
+                    } while (f.Y <= b.Y);
                 }
                 else
                 {

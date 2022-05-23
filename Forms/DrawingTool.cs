@@ -124,6 +124,7 @@ namespace image_filtering_app
 
         bool drawing = false;
         bool moving = false;
+        bool clipping = false;
         int index;
 
         void drawMode(
@@ -330,26 +331,6 @@ namespace image_filtering_app
             RefreshShapes();
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (shapes.Count < 1)
-            //{
-            //    button4.Enabled = false;
-            //    button5.Enabled = false;
-            //    return;
-            //}
-
-            //if (listBox1.SelectedIndex == -1)
-            //{
-            //    button4.Enabled = false;
-            //    button5.Enabled = false;
-            //    return;
-            //}
-
-            //button4.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
-            //button5.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
-        }
-
         private void selectColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             colorDialog3.ShowDialog();
@@ -395,9 +376,85 @@ namespace image_filtering_app
             RefreshShapes();
         }
 
-        //private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    this.editMode = true;
-        //}
+        void clipMode(bool status, Shape shape, int modify_index = -1)
+        {
+            if (!status && shapes[index].shapeType == DrawingShape.POLY)
+            {
+                ClippedPolygon cpoly = new ClippedPolygon((Polygon)shapes[index]);
+                cpoly.SetBoundingRect((Rectangle)currentShape);
+                shapes[index] = cpoly;
+                RefreshShapes();
+            }
+            else if (!status && shapes[index].shapeType == DrawingShape.CPOLY)
+            {
+                ((ClippedPolygon)shapes[index]).SetBoundingRect((Rectangle)currentShape);
+                RefreshShapes();
+            }
+
+            splitContainer2.Panel1.Enabled = !status;
+
+            index = modify_index;
+            clipping = status;
+
+            currentDrawingShape = shape == null ? DrawingShape.EMPTY : shape.shapeType;
+            currentShape = shape;
+            UpdateLabel();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (shapes.Count < 1)
+                return;
+
+            if ((listBox1.SelectedItem as Shape).shapeType != DrawingShape.POLY && (listBox1.SelectedItem as Shape).shapeType != DrawingShape.CPOLY)
+                return;
+
+            FillMenu fillMenuForm = new FillMenu();
+
+            switch (fillMenuForm.ShowDialog())
+            {
+                case DialogResult.Yes:
+                    (listBox1.SelectedItem as Polygon).SetFiller(fillMenuForm.FillColor);
+                    break;
+                case DialogResult.No:
+                    (listBox1.SelectedItem as Polygon).SetFiller(fillMenuForm.filename);
+                    break;
+                case DialogResult.Cancel:
+                default:
+                    break;
+            }
+
+            RefreshShapes();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            clipMode(true, new Rectangle(Color.Transparent, 1), listBox1.SelectedIndex);
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (shapes.Count < 1)
+            {
+                button4.Enabled = false;
+                button5.Enabled = false;
+                return;
+            }
+
+            if (listBox1.SelectedIndex == -1)
+            {
+                button4.Enabled = false;
+                button5.Enabled = false;
+                return;
+            }
+
+            button4.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
+            button5.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
+        }
+
+        private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawMode(true, new Rectangle(colorDialog1.Color, (int)numericUpDown1.Value));
+        }
     }
 }
