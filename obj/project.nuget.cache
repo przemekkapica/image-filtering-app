@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "3dhnfIbdrKe6kKyaSkOJv8ZHo1PzY+GsSqn4roTxs2aMBbtMJ/hrD/RqWopyE0+qH+63b0MqbZAkFPDr80ocHg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kapicap\\Downloads\\image-filtering-app-master\\image-filtering-app-master\\ImageFilteringApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kapicap\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\kapicap\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
