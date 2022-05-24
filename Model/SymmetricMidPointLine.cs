@@ -22,7 +22,7 @@ namespace image_filtering_app
 
         public SymmetricMidPointLine(Color color, int thicc, Color backColor) : base(color)
         {
-            thickness = thicc;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             supportsAA = true;
             this.backColor = backColor;
@@ -30,14 +30,14 @@ namespace image_filtering_app
 
         public SymmetricMidPointLine(Color color, int thicc) : base(color)
         {
-            thickness = thicc;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             supportsAA = true;
         }
 
         public SymmetricMidPointLine(Color color, int thicc, Point start, Point end, Color backColor) : base(color)
         {
-            thickness = thicc;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;
@@ -47,7 +47,7 @@ namespace image_filtering_app
 
         public SymmetricMidPointLine(Color color, int thicc, Point start, Point end) : base(color)
         {
-            thickness = thicc;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;
@@ -56,7 +56,7 @@ namespace image_filtering_app
 
         public SymmetricMidPointLine(Color color, int thicc, Point start, Point end, Clipping clip) : base(color)
         {
-            thickness = thicc;
+            thickness = thicc + 1;
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;

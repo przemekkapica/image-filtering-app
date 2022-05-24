@@ -79,10 +79,13 @@ namespace image_filtering_app
         void RefreshShapes()
         {
             Bitmap bmp = NewBitmap();
-  
+
             foreach (var shape in shapes)
             {
-                DrawShape(bmp, shape);
+                if (shape.shapeType == DrawingShape.FILL)
+                    bmp = FloodFiller.FourWayFloodFill(bmp, shape.shapeColor, ((Fill)shape).seedPoint);
+                else
+                    DrawShape(bmp, shape);
             }
 
             pictureBox1.Image = bmp;
@@ -125,6 +128,7 @@ namespace image_filtering_app
         bool drawing = false;
         bool moving = false;
         bool clipping = false;
+        bool flooding = false;
         int index;
 
         void drawMode(
@@ -172,6 +176,19 @@ namespace image_filtering_app
 
                 if (1 == currentShape.AddPoint(e.Location))
                     drawMode(false);
+            }
+
+            if (clipping)
+            {
+                if (1 == currentShape.AddPoint(e.Location))
+                    clipMode(false, null);
+            }
+
+            if (flooding)
+            {
+                shapes.Add(new Fill(colorDialog1.Color, e.Location));
+                flooding = false;
+                RefreshShapes();
             }
         }
 
@@ -455,6 +472,11 @@ namespace image_filtering_app
         private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawMode(true, new Rectangle(colorDialog1.Color, (int)numericUpDown1.Value));
+        }
+
+        private void fillARegionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            flooding = true;
         }
     }
 }
