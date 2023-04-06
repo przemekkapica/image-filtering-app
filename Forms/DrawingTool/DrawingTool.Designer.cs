@@ -37,6 +37,7 @@
             this.midpointLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.midpointCircleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.polygonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rectangleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.antialiasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearCanvasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +57,7 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
             this.colorDialog3 = new System.Windows.Forms.ColorDialog();
-            this.rectangleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fillARegionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -76,7 +77,8 @@
             this.fileToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.settingsToolStripMenuItem,
-            this.clearCanvasToolStripMenuItem});
+            this.clearCanvasToolStripMenuItem,
+            this.fillARegionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
@@ -131,23 +133,30 @@
             // midpointLineToolStripMenuItem
             // 
             this.midpointLineToolStripMenuItem.Name = "midpointLineToolStripMenuItem";
-            this.midpointLineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.midpointLineToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.midpointLineToolStripMenuItem.Text = "Line";
             this.midpointLineToolStripMenuItem.Click += new System.EventHandler(this.midpointLineToolStripMenuItem_Click);
             // 
             // midpointCircleToolStripMenuItem
             // 
             this.midpointCircleToolStripMenuItem.Name = "midpointCircleToolStripMenuItem";
-            this.midpointCircleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.midpointCircleToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.midpointCircleToolStripMenuItem.Text = "Circle";
             this.midpointCircleToolStripMenuItem.Click += new System.EventHandler(this.midpointCircleToolStripMenuItem_Click);
             // 
             // polygonToolStripMenuItem
             // 
             this.polygonToolStripMenuItem.Name = "polygonToolStripMenuItem";
-            this.polygonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.polygonToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.polygonToolStripMenuItem.Text = "Polygon";
             this.polygonToolStripMenuItem.Click += new System.EventHandler(this.polygonToolStripMenuItem_Click);
+            // 
+            // rectangleToolStripMenuItem
+            // 
+            this.rectangleToolStripMenuItem.Name = "rectangleToolStripMenuItem";
+            this.rectangleToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.rectangleToolStripMenuItem.Text = "Rectangle";
+            this.rectangleToolStripMenuItem.Click += new System.EventHandler(this.rectangleToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -161,7 +170,7 @@
             // 
             this.antialiasingToolStripMenuItem.CheckOnClick = true;
             this.antialiasingToolStripMenuItem.Name = "antialiasingToolStripMenuItem";
-            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.antialiasingToolStripMenuItem.Text = "Anti-aliasing";
             this.antialiasingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.antialiasingToolStripMenuItem_CheckedChanged);
             this.antialiasingToolStripMenuItem.Click += new System.EventHandler(this.antialiasingToolStripMenuItem_Click_1);
@@ -300,7 +309,7 @@
             this.label2.Location = new System.Drawing.Point(78, 154);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 15);
+            this.label2.Size = new System.Drawing.Size(59, 15);
             this.label2.TabIndex = 3;
             this.label2.Text = "Thickness";
             // 
@@ -359,12 +368,12 @@
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
-            // rectangleToolStripMenuItem
+            // fillARegionToolStripMenuItem
             // 
-            this.rectangleToolStripMenuItem.Name = "rectangleToolStripMenuItem";
-            this.rectangleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.rectangleToolStripMenuItem.Text = "Rectangle";
-            this.rectangleToolStripMenuItem.Click += new System.EventHandler(this.rectangleToolStripMenuItem_Click);
+            this.fillARegionToolStripMenuItem.Name = "fillARegionToolStripMenuItem";
+            this.fillARegionToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
+            this.fillARegionToolStripMenuItem.Text = "Fill a region";
+            this.fillARegionToolStripMenuItem.Click += new System.EventHandler(this.fillARegionToolStripMenuItem_Click);
             // 
             // DrawingTool
             // 
@@ -428,5 +437,6 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ToolStripMenuItem rectangleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fillARegionToolStripMenuItem;
     }
 }
